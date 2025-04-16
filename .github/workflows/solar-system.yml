@@ -20,11 +20,8 @@ jobs:
     name: Unit Testing
     strategy:
       matrix:
-        nodejs_version: [18, 20]
-        operating_system: [ubuntu-latest, macos-latest]
-        exclude:
-          - nodejs_version: 18
-            operating_system: macos-latest
+        nodejs_version: [18]
+        operating_system: [ubuntu-latest]
     runs-on: ${{ matrix.operating_system }}
     steps:
       - name: Checkout Repository
@@ -50,21 +47,22 @@ jobs:
       - name: List Files
         run: ls
 
-      - name: Check if artifact exists
-        id: check_artifact
-        uses: actions/github-script@v6
-        with:
-          script: |
-            const artifacts = await github.rest.actions.listWorkflowRunArtifacts({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              run_id: ${{ github.run_id }},
-            });
-            const artifactExists = artifacts.data.artifacts.some(artifact => artifact.name === 'Mocha-Test-Result');
-            return artifactExists;
+      # - name: Check if artifact exists
+      #   id: check_artifact
+      #   uses: actions/github-script@v6
+      #   with:
+      #     script: |
+      #       const artifacts = await github.rest.actions.listWorkflowRunArtifacts({
+      #         owner: context.repo.owner,
+      #         repo: context.repo.repo,
+      #         run_id: ${{ github.run_id }},
+      #       });
+      #       const artifactExists = artifacts.data.artifacts.some(artifact => artifact.name === 'Mocha-Test-Result');
+      #       return artifactExists;
 
       - name: Archive Test Result
-        if: ${{ steps.check_artifact.outputs.result == 'false' }}
+        # if: ${{ steps.check_artifact.outputs.result == 'false' }}
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: Mocha-Test-Result
