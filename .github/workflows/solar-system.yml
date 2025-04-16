@@ -55,34 +55,34 @@ jobs:
           path: coverage
           retention-days: 5
 
-  deploy-on-ubuntu:
-    needs: code-coverage
-    runs-on: ubuntu-latest
-    steps:
-      - name: Echo Docker Details
-        run: docker info
-      - name: Run images
-        run: docker run hello-world
-
-  deploy-on-windows:
-    needs: code-coverage
-    runs-on: windows-latest
-    steps:
-      - name: Echo Docker Details
-        run: docker info
-      - name: Run images
-        run: docker run hello-world
-
-  # deploy:
+  # deploy-on-ubuntu:
   #   needs: code-coverage
-  #   name: Deploy
-  #   strategy:
-  #     matrix:
-  #       os: [latest, 22.04]
-  #       images: [ubuntu]
-  #   runs-on: ${{ matrix.os }}
+  #   runs-on: ubuntu-latest
   #   steps:
   #     - name: Echo Docker Details
   #       run: docker info
-  #     - name: Run Image on ${{ matrix.os }}
-  #       run: docker run ${{ matrix.images }}
+  #     - name: Run images
+  #       run: docker run hello-world
+
+  # deploy-on-windows:
+  #   needs: code-coverage
+  #   runs-on: windows-latest
+  #   steps:
+  #     - name: Echo Docker Details
+  #       run: docker info
+  #     - name: Run images
+  #       run: docker run hello-world
+
+  deploy:
+    needs: code-coverage
+    name: Deploy
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        images: [hello-world]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Echo Docker Details
+        run: docker info
+      - name: Run Image on ${{ matrix.os }}
+        run: docker run ${{ matrix.images }}
