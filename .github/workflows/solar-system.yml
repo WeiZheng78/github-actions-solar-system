@@ -10,11 +10,11 @@ env:
   MONGO_USERNAME: superuser
   MONGO_PASSWORD: ${{ secrets.MONGO_PASSWORD }}
 
-  concurrency:
+concurrency:
   group: pipeline
   cancel-in-progress: false
 
-  jobs:
+jobs:
   unit-testing:
     timeout-minutes: 1
     name: Unit Testing
