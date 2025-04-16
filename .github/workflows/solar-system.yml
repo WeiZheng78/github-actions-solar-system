@@ -1,10 +1,10 @@
 name: Solar System Workflow
-on: 
+on:
   workflow_dispatch:
   push:
     branches:
       - main
-      - 'feature/*'
+      - "feature/*"
 env:
   MONGO_URI: mongodb+srv://supercluster.d83jj.mongodb.net/superData
   MONGO_USERNAME: superuser
@@ -26,24 +26,38 @@ jobs:
       - name: Unit Testing
         run: npm test
       - name: Archive Test Result
-        if: always()      #added
+        if: always() #added
         uses: actions/upload-artifact@v4
         with:
           name: Mocha-Test-Result
           path: test-results.xml
 
   code-coverage:
-     runs-on: ubuntu-latest
-     steps:
-       - uses: actions/checkout@v4
-       - uses: actions/setup-node@v4
-         with:
+    name: Code Coverage
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
           node-version: 18
-       - run: npm install
-       - continue-on-error: true
-         run: npm run coverage
-       - uses: actions/upload-artifact@v4
-         with:
-           name: Code-Coverage-Result
-           path: coverage
-           retention-days: 5
+      - run: npm install
+      - continue-on-error: true
+        run: npm run coverage
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Code-Coverage-Result
+          path: coverage
+          retention-days: 5
+
+  deploy:
+    name: Deploy
+    strategy:
+      matrix:
+        os: [ubuntu-latest, ubuntu-20.04]
+        images: [alpline]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Echo Docker Details
+        run: docker info
+      - name: Run Image on ${{ matrix.os }}
+        run: docker run ${{ matrix.images }}
