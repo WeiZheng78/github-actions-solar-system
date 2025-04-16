@@ -34,6 +34,7 @@ jobs:
 
   code-coverage:
     name: Code Coverage
+    needs: unit-testing
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -53,7 +54,7 @@ jobs:
     name: Deploy
     strategy:
       matrix:
-        os: [ubuntu-latest, ubuntu-20.04]
+        os: [ubuntu-latest, ubuntu-22.04]
         images: [alpline]
     runs-on: ${{ matrix.os }}
     steps:
