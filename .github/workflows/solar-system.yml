@@ -50,12 +50,26 @@ jobs:
       - name: List Files
         run: ls
 
+      - name: Check if artifact exists
+        id: check_artifact
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const artifacts = await github.rest.actions.listWorkflowRunArtifacts({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              run_id: ${{ github.run_id }},
+            });
+            const artifactExists = artifacts.data.artifacts.some(artifact => artifact.name === 'Mocha-Test-Result');
+            return artifactExists;
+
       - name: Archive Test Result
-        if: always() #added
+        if: ${{ steps.check_artifact.outputs.result == 'false' }}
         uses: actions/upload-artifact@v4
         with:
           name: Mocha-Test-Result
           path: test-results.xml
+          retention-days: 7
 
   code-coverage:
     needs: unit-testing
