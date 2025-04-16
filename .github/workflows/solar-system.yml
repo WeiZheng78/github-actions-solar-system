@@ -23,6 +23,9 @@ jobs:
         nodejs_version: [18]
         operating_system: [ubuntu-latest]
     runs-on: ${{ matrix.operating_system }}
+    permissions:
+      actions: read
+      contents: read
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -47,22 +50,22 @@ jobs:
       - name: List Files
         run: ls
 
-      # - name: Check if artifact exists
-      #   id: check_artifact
-      #   uses: actions/github-script@v6
-      #   with:
-      #     script: |
-      #       const artifacts = await github.rest.actions.listWorkflowRunArtifacts({
-      #         owner: context.repo.owner,
-      #         repo: context.repo.repo,
-      #         run_id: ${{ github.run_id }},
-      #       });
-      #       const artifactExists = artifacts.data.artifacts.some(artifact => artifact.name === 'Mocha-Test-Result');
-      #       return artifactExists;
+      - name: Check if artifact exists
+        id: check_artifact
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const artifacts = await github.rest.actions.listWorkflowRunArtifacts({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              run_id: ${{ github.run_id }},
+            });
+            const artifactExists = artifacts.data.artifacts.some(artifact => artifact.name === 'Mocha-Test-Result');
+            return artifactExists;
 
       - name: Archive Test Result
-        # if: ${{ steps.check_artifact.outputs.result == 'false' }}
-        if: always()
+        if: ${{ steps.check_artifact.outputs.result == 'false' }}
+        # if: always()
         uses: actions/upload-artifact@v4
         with:
           name: Mocha-Test-Result
