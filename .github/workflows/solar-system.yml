@@ -29,7 +29,6 @@ jobs:
     permissions:
       actions: read
       contents: read
-      packages: write
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -121,6 +120,8 @@ jobs:
         run: docker run ${{ matrix.images }}
 
   docker:
+    permissions:
+      packages: write
     name: Containerization
     needs: deploy
     runs-on: ubuntu-latest
