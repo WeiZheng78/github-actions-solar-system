@@ -1,0 +1,14 @@
+name: 'Hello World Container Action'
+description: 'A simple container action that prints "Hello, World!"'
+
+inputs:
+  greeting:
+    description: 'The greeting to print'
+    required: false
+    default: 'Hello, World!'
+
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.greeting }}

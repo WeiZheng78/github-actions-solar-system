@@ -15,7 +15,19 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  hello-world:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Hello World Container Action
+        uses: ./hello-world-action
+        with:
+          greeting: "Hello from GitHub Actions!"
+
   unit-testing:
+    needs: hello-world
     timeout-minutes: 20
     name: Unit Testing
     services:
@@ -84,6 +96,7 @@ jobs:
           retention-days: 7
 
   code-coverage:
+    needs: hello-world
     name: Code Coverage
     runs-on: ubuntu-latest
     container:
