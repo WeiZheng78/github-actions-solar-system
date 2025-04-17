@@ -160,6 +160,21 @@ jobs:
 
           echo Testing Image URL using wget
           wget -q -O - 127.0.0.1:3000/live | grep live
+
+      - name: Get Repository Owner in Lowercase
+        id: set_var_repo_owner
+        run: |
+          # Get the repository owner from the context
+          REPO_OWNER=${{ github.repository_owner }}
+
+          # Convert to lowercase using shell command
+          LOWERCASE_REPO_OWNER=$(echo "$REPO_OWNER" | tr '[:upper:]' '[:lower:]')
+
+          # Print the result
+          echo "Original Repository Owner: $REPO_OWNER"
+          echo "Lowercase Repository Owner: $LOWERCASE_REPO_OWNER"
+          echo "::set-output name=lowcase_repo_owner::$LOWERCASE_REPO_OWNERs"
+
       - name: Container Registry Push
         uses: docker/build-push-action@v4
         with:
@@ -167,4 +182,4 @@ jobs:
           push: true
           tags: |
             ${{ vars.DOCKERHUB_USERNAME }}/solar-system:${{ github.sha }}
-            ghcr.io/${{ toLower(github.repository_owner) }}/solar-system:${{ github.sha }}
+            ghcr.io/{{ steps.set_var_repo_owner.outputs.lowcase_repo_owner }}/solar-system:${{ github.sha }}
