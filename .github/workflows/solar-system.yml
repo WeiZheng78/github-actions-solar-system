@@ -146,6 +146,7 @@ jobs:
           context: .
           push: false
           tags: ${{ vars.DOCKERHUB_USERNAME }}/solar-system:${{ github.sha }}
+
       - name: Docker Image Testing
         run: |
           docker images
@@ -173,7 +174,7 @@ jobs:
           # Print the result
           echo "Original Repository Owner: $REPO_OWNER"
           echo "Lowercase Repository Owner: $LOWERCASE_REPO_OWNER"
-          echo "::set-output name=lowcase_repo_owner::$LOWERCASE_REPO_OWNERs"
+          echo "::set-output name=lowercase_repo_owner::$LOWERCASE_REPO_OWNERs"
 
       - name: Container Registry Push
         uses: docker/build-push-action@v4
@@ -182,4 +183,4 @@ jobs:
           push: true
           tags: |
             ${{ vars.DOCKERHUB_USERNAME }}/solar-system:${{ github.sha }}
-            ghcr.io/{{ steps.set_var_repo_owner.outputs.lowcase_repo_owner }}/solar-system:${{ github.sha }}
+            ghcr.io/${{ steps.set_var_repo_owner.outputs.lowercase_repo_owner }}/solar-system:${{ github.sha }}
