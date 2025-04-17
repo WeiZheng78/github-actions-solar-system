@@ -78,6 +78,9 @@ jobs:
     needs: unit-testing
     name: Code Coverage
     runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -99,7 +102,7 @@ jobs:
 
   deploy:
     needs: code-coverage
-    name: Deploy
+    name: Deploy Testing
     strategy:
       fail-fast: false
       max-parallel: 2
