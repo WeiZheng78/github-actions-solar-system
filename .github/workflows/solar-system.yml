@@ -16,7 +16,7 @@ concurrency:
 
 jobs:
   unit-testing:
-    timeout-minutes: 1
+    timeout-minutes: 20
     name: Unit Testing
     services:
       mongo-db:
