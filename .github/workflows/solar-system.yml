@@ -174,7 +174,7 @@ jobs:
           # Print the result
           echo "Original Repository Owner: $REPO_OWNER"
           echo "Lowercase Repository Owner: $LOWERCASE_REPO_OWNER"
-          echo "::set-output name=lowercase_repo_owner::$LOWERCASE_REPO_OWNERs"
+          echo "::set-output name=lowercase_repo_owner::$LOWERCASE_REPO_OWNER"
 
       - name: Container Registry Push
         uses: docker/build-push-action@v4
