@@ -282,6 +282,7 @@ jobs:
       - name: Test URL Output using CURL and JQ
         env:
           URL: ${{ needs.dev-deploy.outputs.APP_INGRESS_URL }}
-        run: echo $URL
+        run: |
+          echo $URL
           echo "---------------------------------------"
-          curl https://${{ env.URL }}/live -s -k | jq
+          curl https://${{ env.URL }}/live -s -k
