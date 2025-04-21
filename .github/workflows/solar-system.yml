@@ -230,6 +230,7 @@ jobs:
       APP_INGRESS_URL: ${{ steps.set-ingress-host-address.outputs.APP_INGRESS_HOST }}
     environment:
       name: development
+      url: https://${{ steps.set-ingress-host-address.outputs.APP_INGRESS_HOST }}
     steps:
       - uses: actions/checkout@v4
       - uses: azure/setup-kubectl@v4
