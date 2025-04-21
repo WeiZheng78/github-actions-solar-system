@@ -232,7 +232,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: azure/setup-kubectl@v4
         with:
-          version: v1.28.1
+          version: v1.32.2
       - uses: azure/k8s-set-context@v3
         with:
           method: kubeconfig
@@ -254,6 +254,15 @@ jobs:
           REPLICAS: ${{ vars.REPLICAS }}
           IMAGE: ${{ vars.DOCKERHUB_USERNAME }}/solar-system:${{ github.sha }}
           INGRESS_IP: ${{ env.INGRESS_IP }}
+      - name: Create MongoDB Secret
+        run: |
+          kubectl -n ${{ vars.NAMESPACE }} create secret generic mongo-db-creds \
+          --from-literal=MONGO_URI=${{ env.MONGO_URI }} \
+          --from-literal=MONGO_USERNAME=${{ env.MONGO_USERNAME }} \
+          --from-literal=MONGO_PASSWORD=${{ secrets.MONGO_PASSWORD }} \
+          --save-config \
+          --dry-run=client \
+          -o yaml | kubectl apply -f -
       - name: Check Files
         run: |
-          cat kubernetes/development/*.yaml
+          kubectl apply -f kubernetes/development
