@@ -1,0 +1,11 @@
+name: Workflow A
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  call-workflow-B:
+    uses: octo-org/example-repo/.github/workflows/workflow-B.yml@main
+    secrets: inherit

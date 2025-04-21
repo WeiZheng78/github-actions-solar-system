@@ -1,0 +1,17 @@
+name: Workflow B
+
+on:
+  workflow_run:
+    workflows: ["Workflow A"]
+    types:
+      - completed
+
+jobs:
+  example-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print secrets
+        run: |
+          echo "Secrets inherited from Workflow A:"
+          echo "SECRET_1=${{ secrets.SECRET_1 }}"
+          echo "SECRET_2=${{ secrets.SECRET_2 }}"
