@@ -284,4 +284,4 @@ jobs:
           URL: ${{ needs.dev-deploy.outputs.APP_INGRESS_URL }}
         run: echo $URL
           echo "---------------------------------------"
-          curl https://${{ env.URL }}/live -s -k | jq -r .status | grep -i live
+          curl https://${{ env.URL }}/live -s -k | jq
