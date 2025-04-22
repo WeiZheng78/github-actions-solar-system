@@ -224,6 +224,7 @@ jobs:
             ghcr.io/${{ steps.set_var_repo_owner.outputs.lowercase_repo_owner }}/solar-system:${{ github.sha }}
 
   dev-deploy:
+    if: contains(github.ref,'feature/')
     needs: docker
     runs-on: ubuntu-latest
     outputs:
@@ -276,6 +277,7 @@ jobs:
           echo "APP_INGRESS_HOST=$(kubectl -n ${{ vars.NAMESPACE }} get ingress -o jsonpath="{.items[0].spec.tls[0].hosts[0]}")" >> "$GITHUB_OUTPUT"
 
   dev-integration-testing:
+    if: contains(github.ref,'feature/')
     name: Dev Integration Testing
     needs: dev-deploy
     runs-on: ubuntu-latest
@@ -289,7 +291,8 @@ jobs:
           curl https://${{ env.URL }}/live -s -k
 
   prod-deploy:
-    needs: dev-integration-testing
+    if: github.ref == 'refs/heads/main'
+    needs: docker
     runs-on: ubuntu-latest
     outputs:
       APP_INGRESS_URL: ${{ steps.set-ingress-host-address.outputs.APP_INGRESS_HOST }}
@@ -341,6 +344,7 @@ jobs:
           echo "APP_INGRESS_HOST=$(kubectl -n ${{ vars.NAMESPACE }} get ingress -o jsonpath="{.items[0].spec.tls[0].hosts[0]}")" >> "$GITHUB_OUTPUT"
 
   prod-integration-testing:
+    if: github.ref == 'refs/heads/main'
     name: Prod Integration Testing
     needs: prod-deploy
     runs-on: ubuntu-latest
